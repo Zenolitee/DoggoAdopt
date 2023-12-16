@@ -1,0 +1,8 @@
+@import "tailwindcss/tailwind.css";
+
+.background-image {
+    background: linear-gradient(rgba(0, 0, 0, 0.30), rgba(0, 0, 0, 0.30)), url('../image/background.jpg');
+    background-size: cover;
+    height: 100vh;
+    width: 100%;
+}   
