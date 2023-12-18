@@ -10,10 +10,14 @@ const Login = () => {
     
   <div className="container flex max-w-none">
   <Navbar />
-  <div className="background-image">
-  <div className="mb-4 place-content-center">
-  <div className="pl-8 rectangle-shape bg-gray-300 p-8 rounded-lg w-[30rem] h-[30rem] bg-opacity-20">
   
+  <div className="background-image">
+  
+  <div className="rectangle-shape place-content-center bg-gray-300 m-[5rem] p-10 rounded-lg w-[30rem] h-[30rem] bg-opacity-10">
+  <div className="mb-4">
+  
+  <div className = "text-green-400 text-4xl ml-[9rem] font-bold">Login</div>
+
             <label htmlFor="username" className="block text-sm font-medium text-gray-600">
               <div className = "text-green-400 font-bold">Username</div>
             </label>
@@ -21,11 +25,11 @@ const Login = () => {
               type="text"
               id="username"
               name="username"
-              className="mt-1 p-2 w-[30rem] border rounded-md"
+              className="mt-1 p-2 w-[25rem] border rounded-md"
               placeholder="Enter your username"
             />
-          </div>
-          <div className="mb-4">
+          
+          <div className="mb-4 pt-10">
             <label htmlFor="password" className="block text-sm font-medium text-gray-600">
             <div className = "text-green-400 font-bold">Password</div>
             </label>
@@ -33,7 +37,7 @@ const Login = () => {
               type="password"
               id="password"
               name="password"
-              className="mt-1 p-2 w-[30rem] border rounded-md"
+              className="mt-1 p-2 w-[25rem] border rounded-md"
               placeholder="Enter your password"
             />
           </div>
@@ -44,7 +48,7 @@ const Login = () => {
             Login
           </button>
          
-        
+          </div>
           </div>
     
   </div>
