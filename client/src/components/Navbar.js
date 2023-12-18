@@ -1,7 +1,7 @@
 // src/Home.js
 import React from 'react';
 import "../css/Navbar.css";
-import { FaHouseChimney, FaDog } from "react-icons/fa6";
+import { FaHouseChimney, FaDog, FaGear, FaUser } from "react-icons/fa6";
 
 
 const Navbar = () => {
@@ -12,6 +12,10 @@ const Navbar = () => {
     
     <a href="/"><NavbarIcon icon={<FaHouseChimney size="30" />}/></a>
     <a href="/about"><NavbarIcon icon={<FaDog size="30" />}/></a>
+
+    <div className = "fixed bottom-0 left-0 flex flex-col ml-[0.4rem]">
+    <a href="/login"><NavbarIcon icon={<FaUser size="30" />}/></a>
+    <a href="/settings"><NavbarIcon icon={<FaGear size="30" />}/></a></div> 
         
     
         
