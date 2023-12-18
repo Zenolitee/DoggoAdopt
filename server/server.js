@@ -36,7 +36,7 @@ app.post('/validatePassword', (req, res) => {
     
 })
 
-app.listen(5000, () => {console.log("Server is alive nigga.")})
+app.listen(3001, () => {console.log("Server is alive.")})
 
 
 
