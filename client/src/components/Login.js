@@ -11,6 +11,8 @@ const Login = () => {
     try {
       const response = await axios.post('http://localhost:3001/validatePassword', { username, password });
 
+      console.log('Login response:', response);  // Add this line
+
       if (response.data.validation) {
         alert('Login successful.');
       } else {
@@ -23,7 +25,12 @@ const Login = () => {
 
   const onRegister = async () => {
     try {
+      console.log('Before axios.post');
+      console.log('Registration request payload:', { username, password });
       const response = await axios.post('http://localhost:3001/register', { username, password });
+      console.log('After axios.post', response);
+
+      console.log('Registration response:', response);  // Add this line
 
       if (response.data.registration) {
         alert('Registration successful. You can now log in.');
@@ -81,7 +88,7 @@ const Login = () => {
             <button
               type="button"
               onClick={onFinish}
-              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300"
+              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300 ml-[1rem]"
             >
               Login
             </button>
