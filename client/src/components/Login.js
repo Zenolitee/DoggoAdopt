@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import "../css/Login.css";
 import Navbar from "./Navbar.js";
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -20,25 +21,6 @@ const Login = () => {
       }
     } catch (error) {
       console.error('Error during login:', error);
-    }
-  };
-
-  const onRegister = async () => {
-    try {
-      console.log('Before axios.post');
-      console.log('Registration request payload:', { username, password });
-      const response = await axios.post('http://localhost:3001/register', { username, password });
-      console.log('After axios.post', response);
-
-      console.log('Registration response:', response);  // Add this line
-
-      if (response.data.registration) {
-        alert('Registration successful. You can now log in.');
-      } else {
-        alert('Registration failed. ' + response.data.message);
-      }
-    } catch (error) {
-      console.error('Error during registration:', error);
     }
   };
 
@@ -78,13 +60,9 @@ const Login = () => {
                 placeholder="Enter your password"
               />
             </div>
-            <button
-              type="button"
-              onClick={onRegister}
-              className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring focus:border-green-300"
-            >
+            <Link to="/create" className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring focus:border-green-300">
               Register
-            </button>
+            </Link>
             <button
               type="button"
               onClick={onFinish}
