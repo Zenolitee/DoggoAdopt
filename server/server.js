@@ -1,14 +1,78 @@
 const express = require('express')
 const app = express()
 const sqlite3 = require('sqlite3').verbose()
-const db = new sqlite3.Database(':memory:')
+const cors = require('cors')
 
 
+
+app.use(cors({
+    origin: 'http://localhost:3000',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+}));
+
+
+
+
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    next();
+});
+app.use(express.json({limit: '10mb'}))
+
+let db = new sqlite3.Database('dogadopt.db', (err) => {
+    if(err){
+        console.error(err.message)
+    }console.log('Connected to the database...')
+})
+
+
+app.post('/validatePassword', (req, res) => {
+    const { username, password } = req.body;
+    db.all('SELECT * FROM credentials WHERE username = ? AND password = ? COLLATE NOCASE', [username, password], (err, rows) => {
+        if (err) {
+            console.error('Error during SQL query:', err);
+            res.status(500).send({ validation: false, error: 'Internal Server Error' });
+            return;
+        }
+
+        if (rows.length > 0) {
+            res.send({ validation: true });
+        } else {
+            res.send({ validation: false });
+        }
+    });
+});
+
+app.post('/register', (req, res) => {
+    const { username, password } = req.body;
+    db.run('INSERT INTO credentials (username, password) VALUES (?, ?)', [username, password], (err) => {
+      if (err) {
+        console.error('Error during registration:', err);
+        res.status(500).send({ registration: false, message: 'Internal Server Error' });
+      } else {
+        res.send({ registration: true });
+      }
+    });
+  });
+  
+
+
+
+
+
+
+
+app.listen(3001, () => {console.log("Server is alive.")})
+
+
+
+/*
 app.get("/api", (req, res) => {
     res.json({"users": ["userOne", "userTwo", "userThree"] })
 })
 
-app.listen(5000, () => {console.log("Server is alive.")})
+
 
 db.serialize(() => {
     db.run('CREATE TABLE lorem (info TEXT)')
@@ -25,4 +89,4 @@ db.serialize(() => {
     })
   })
   
-  db.close()
+  db.close()*/
