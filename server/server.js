@@ -6,7 +6,7 @@ const cors = require('cors')
 
 
 app.use(cors({
-    origin: 'http://localhost:5000',
+    origin: 'http://localhost:3000',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
 }));
