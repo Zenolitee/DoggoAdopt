@@ -9,11 +9,11 @@ const Adoption = () => {
 
   useEffect(() => {
     // Fetch pet information from the backend when the component mounts
-    fetch('http://localhost:3001/api/pets')  // Update the URL if your server is running on a different port or domain
+    fetch('http://localhost:3001/api/pets')
       .then(response => response.json())
       .then(data => setPetData(data))
       .catch(error => console.error('Error fetching pet data:', error));
-  }, []); // Empty dependency array to run the effect only once on mount
+  }, []);
 
   const startIndex = (currentPage - 1) * panelsPerPage;
   const endIndex = Math.min(currentPage * panelsPerPage, petData.length);
@@ -32,14 +32,21 @@ const Adoption = () => {
       <div className="background-image flex ml-12">
         {petData.slice(startIndex, endIndex).map((pet, index) => (
           <div key={index} className="rectangle-shape bg-gray-300 rounded-lg w-[25rem] h-[25rem] bg-opacity-20 mt-[5rem] ml-[4.6rem]">
-            {index % 2 === 0 && pet.Image ? (
+            {pet.Image ? (
               <>
+                {console.log('Base64 Image:', `data:image/jpeg;base64,${uint8ArrayToBase64(pet.Image.data)}`)}
                 <img
-                  src={`data:image/jpeg;base64,${pet.Image.toString('base64')}`}  // Convert Buffer to base64
+                  src={`data:image/jpeg;base64,${uint8ArrayToBase64(pet.Image.data)}`}
                   alt={pet.PetName}
-                  className="w-full h-full object-cover rounded-t-lg"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
-                <div className="text-green-400 font-bold flex items-center mt-[1rem] justify-center text-4xl">{pet.PetName}</div>
+                <div className="panel-content">
+                  <div className="text-green-400 font-bold text-4xl">{pet.PetName}</div>
+                  <div className="text-green-400 text-sm">{pet.Description}</div>
+                  <div className="text-green-400 text-sm">Birthday: {pet.DateOfBirth}</div>
+                  <div className="text-green-400 text-sm">Owner: {pet.OwnerName}</div>
+                  {/* Add more information as needed */}
+                </div>
               </>
             ) : (
               <div className={`text-green-400 font-bold flex items-center mt-[1rem] justify-center text-4xl ${index % 2 !== 0 ? 'panel-text' : ''}`}>
@@ -64,5 +71,13 @@ const Adoption = () => {
     </div>
   );
 };
+
+function uint8ArrayToBase64(uint8Array) {
+  let binary = '';
+  uint8Array.forEach((byte) => {
+    binary += String.fromCharCode(byte);
+  });
+  return btoa(binary);
+}
 
 export default Adoption;
