@@ -1,50 +1,83 @@
-// src/About.js
-import React from 'react';
-import Navbar from "./Navbar.js"
-import "../css/Adoption.css"
+import React, { useState, useEffect } from 'react';
+import Navbar from './Navbar.js';
+import '../css/Adoption.css';
 
-const About = () => {
+const Adoption = () => {
+  const panelsPerPage = 3;
+  const [petData, setPetData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    // Fetch pet information from the backend when the component mounts
+    fetch('http://localhost:3001/api/pets')
+      .then(response => response.json())
+      .then(data => setPetData(data))
+      .catch(error => console.error('Error fetching pet data:', error));
+  }, []);
+
+  const startIndex = (currentPage - 1) * panelsPerPage;
+  const endIndex = Math.min(currentPage * panelsPerPage, petData.length);
+
+  const handleNextPage = () => {
+    setCurrentPage(prevPage => prevPage + 1);
+  };
+
+  const handlePreviousPage = () => {
+    setCurrentPage(prevPage => Math.max(1, prevPage - 1));
+  };
+
   return (
     <div className="container flex max-w-none">
       <Navbar />
-      <div className="background-image flex flex-wrap ml-12">
-        <div className="rectangle-shape bg-gray-300 rounded-lg w-[30rem] h-[30rem] bg-opacity-20 mt-[5rem] ml-[13rem]">
-          <div className="text-green-400 font-bold flex items-center mt-[1rem] justify-center text-4xl">T e s t</div>
-        </div>
-
-        <div className="rectangle-shape bg-gray-300 rounded-lg w-[30rem] h-[30rem] bg-opacity-20 mt-[5rem] ml-[3rem]">
-          <p>test</p>
-        </div>
-
-        <div className="rectangle-shape bg-gray-300 rounded-lg w-[30rem] h-[30rem] bg-opacity-20 mt-[5rem] ml-[3rem]">
-          <p>test</p>
-        </div>
-
-        <div className="rectangle-shape bg-gray-300 rounded-lg w-[30rem] h-[30rem] bg-opacity-20 mt-[5rem] ml-[3rem]">
-          <p>test</p>
-        </div>
-
-        {/* Add another panel below the first one */}
-        <div className="rectangle-shape bg-gray-300 rounded-lg w-[30rem] h-[30rem] bg-opacity-20 mt-[5rem] ml-[13rem]">
-          <div className="text-green-400 font-bold flex items-center mt-[1rem] justify-center text-4xl">New Panel</div>
-        </div>
-
-        <div className="rectangle-shape bg-gray-300 rounded-lg w-[30rem] h-[30rem] bg-opacity-20 mt-[5rem] ml-[3rem]">
-          <p>test</p>
-        </div>
-
-        <div className="rectangle-shape bg-gray-300 rounded-lg w-[30rem] h-[30rem] bg-opacity-20 mt-[5rem] ml-[3rem]">
-          <p>test</p>
-        </div>
-
-        <div className="rectangle-shape bg-gray-300 rounded-lg w-[30rem] h-[30rem] bg-opacity-20 mt-[5rem] ml-[3rem]">
-          <p>test</p>
-        </div>
-        
-        
+      <div className="background-image flex ml-12">
+        {petData.slice(startIndex, endIndex).map((pet, index) => (
+          <div key={index} className="rectangle-shape bg-gray-300 rounded-lg w-[25rem] h-[25rem] bg-opacity-20 mt-[5rem] ml-[4.6rem]">
+            {pet.Image ? (
+              <>
+                {console.log('Base64 Image:', `data:image/jpeg;base64,${uint8ArrayToBase64(pet.Image.data)}`)}
+                <img
+                  src={`data:image/jpeg;base64,${uint8ArrayToBase64(pet.Image.data)}`}
+                  alt={pet.PetName}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+                <div className="panel-content">
+                  <div className="text-green-400 font-bold text-4xl">{pet.PetName}</div>
+                  <div className="text-green-400 text-sm">{pet.Description}</div>
+                  <div className="text-green-400 text-sm">Birthday: {pet.DateOfBirth}</div>
+                  <div className="text-green-400 text-sm">Owner: {pet.OwnerName}</div>
+                  {/* Add more information as needed */}
+                </div>
+              </>
+            ) : (
+              <div className={`text-green-400 font-bold flex items-center mt-[1rem] justify-center text-4xl ${index % 2 !== 0 ? 'panel-text' : ''}`}>
+                {pet.PetName}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+      <div className="absolute bottom-4 ml-[12rem]">
+        {currentPage > 1 && (
+          <div className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300 ml-[1rem] h-[2.5rem]" onClick={handlePreviousPage}>
+            Previous Page
+          </div>
+        )}
+        {currentPage < Math.ceil(petData.length / panelsPerPage) && (
+          <div className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300 ml-[1rem] h-[2.5rem]" onClick={handleNextPage}>
+            Next Page
+          </div>
+        )}
       </div>
     </div>
   );
+};
+
+function uint8ArrayToBase64(uint8Array) {
+  let binary = '';
+  uint8Array.forEach((byte) => {
+    binary += String.fromCharCode(byte);
+  });
+  return btoa(binary);
 }
 
-export default About;
+export default Adoption;

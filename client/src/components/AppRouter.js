@@ -15,6 +15,7 @@ const AppRouter = () => {
         <Route exact path="/adoption" element={<Adoption/>} />
         <Route exact path="/create" element={<Create/>} />
         
+        <Route path="/adoption_page/:pageid" element={<Adoption />} />
         </Routes>
     </Router>
   );
