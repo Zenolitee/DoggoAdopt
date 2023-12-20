@@ -67,14 +67,14 @@ const CreateAccount = () => {
               />
             </div>
             <Link to="/login">
-  <button
-    type="button"
-    onClick={onRegister}
-    className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring focus:border-green-300"
-  >
-    Register
-  </button>
-</Link>
+              <button
+                type="button"
+                onClick={onRegister}
+                className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring focus:border-green-300"
+              >
+              Register
+              </button>
+            </Link>
           </div>
         </div>
       </div>
