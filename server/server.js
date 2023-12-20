@@ -14,6 +14,7 @@ app.use(cors({
 
 
 
+
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
     next();
@@ -26,6 +27,18 @@ let db = new sqlite3.Database('dogadopt.db', (err) => {
     }console.log('Connected to the database...')
 })
 
+app.get('/api/pets', (req, res) => {
+  // Modify the query as needed to retrieve the necessary information
+  const query = 'SELECT * FROM PetInformation';
+  db.all(query, (err, rows) => {
+      if (err) {
+          console.error(err);
+          res.status(500).json({ error: 'Internal Server Error' });
+      } else {
+          res.json(rows);
+      }
+  });
+});
 
 app.post('/validatePassword', (req, res) => {
     const { username, password } = req.body;

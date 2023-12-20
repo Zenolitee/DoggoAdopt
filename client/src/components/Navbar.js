@@ -7,7 +7,7 @@ import { FaHouseChimney, FaDog, FaGear, FaUser } from "react-icons/fa6";
 const Navbar = () => {
   return (
     
-    <div className="flex flex-col h-screen w-16 flex flex-col
+    <div className="flex flex-col h-screen w-16
                     bg-primary text-secondary shadow-lg fixed top-0">
     
     <a href="/"><NavbarIcon icon={<FaHouseChimney size="30" />}/></a>
