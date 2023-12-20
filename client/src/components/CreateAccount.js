@@ -1,27 +1,31 @@
 // src/CreateAccount.js
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import axios from 'axios';
 
 const CreateAccount = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
+  const navigate = useNavigate();
 
   const onRegister = async () => {
+    // Check if username or password is empty
+    if (username.trim() === '' || password.trim() === '') {
+      alert('Please enter a username and password.');
+      return;
+    }
+
     try {
       const response = await axios.post('http://localhost:3001/register', { username, password });
 
       console.log('Registration response:', response);
 
       if (response.data.registration) {
+        setRegistrationSuccess(true);
         alert('Registration successful. You can now log in.');
-        /* eslint-disable no-restricted-globals */
-        if (history) {
-          history.push('/login');
-        }
-        /* eslint-enable no-restricted-globals */
+          navigate('/login');
       } else {
         alert('Registration failed. ' + response.data.message);
       }
@@ -30,11 +34,15 @@ const CreateAccount = () => {
     }
   };
 
+  if (registrationSuccess) {
+    return null; // or render a different component/page if needed
+  }
+
   return (
     <div className="container flex max-w-none">
       <Navbar />
 
-      <div className="background-image ml-12">
+      <div className="background-image flex items-center justify-center ml-12">
         <div className="rectangle-shape place-content-center bg-gray-300 m-[5rem] p-10 rounded-lg w-[30rem] h-[30rem] bg-opacity-10">
           <div className="mb-4">
             <div className="text-green-400 text-4xl ml-[5rem] font-bold">Create Account</div>
@@ -66,7 +74,6 @@ const CreateAccount = () => {
                 placeholder="Enter your password"
               />
             </div>
-            <Link to="/login">
               <button
                 type="button"
                 onClick={onRegister}
@@ -74,7 +81,6 @@ const CreateAccount = () => {
               >
               Register
               </button>
-            </Link>
           </div>
         </div>
       </div>

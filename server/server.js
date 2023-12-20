@@ -32,14 +32,14 @@ app.post('/validatePassword', (req, res) => {
     db.all('SELECT * FROM credentials WHERE username = ? AND password = ? COLLATE NOCASE', [username, password], (err, rows) => {
         if (err) {
             console.error('Error during SQL query:', err);
-            res.status(500).send({ validation: false, error: 'Internal Server Error' });
+            res.status(500).send({ sucess: false, error: 'Internal Server Error' });
             return;
         }
 
         if (rows.length > 0) {
-            res.send({ validation: true });
+            res.send({ success: true, username: rows[0].username });
         } else {
-            res.send({ validation: false });
+            res.status(401).send({ success: false, message: 'Invalid username or password' });
         }
     });
 });
@@ -55,13 +55,6 @@ app.post('/register', (req, res) => {
       }
     });
   });
-  
-
-
-
-
-
-
 
 app.listen(3001, () => {console.log("Server is alive.")})
 
