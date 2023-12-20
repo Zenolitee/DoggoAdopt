@@ -7,7 +7,7 @@ const About = () => {
   return (
     <div className="container flex max-w-none">
       <Navbar />
-      <div className="background-image flex flex-wrap">
+      <div className="background-image flex flex-wrap ml-12">
         <div className="rectangle-shape bg-gray-300 rounded-lg w-[30rem] h-[30rem] bg-opacity-20 mt-[5rem] ml-[13rem]">
           <div className="text-green-400 font-bold flex items-center mt-[1rem] justify-center text-4xl">T e s t</div>
         </div>

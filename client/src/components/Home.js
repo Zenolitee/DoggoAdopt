@@ -8,7 +8,7 @@ const Home = () => {
     
   <div className="container flex max-w-none">
   <Navbar />
-  <div className="background-image">
+  <div className="background-image ml-12">
   <style>
   @import url('https://fonts.googleapis.com/css?family=Nunito:400,700&display=swap');
   </style>
