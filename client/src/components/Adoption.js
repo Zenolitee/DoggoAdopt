@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from "./Navbar.js";
-import "../css/Adoption.css";
+import Navbar from './Navbar.js';
+import '../css/Adoption.css';
 
 const Adoption = () => {
   const panelsPerPage = 3;
@@ -19,11 +19,11 @@ const Adoption = () => {
   const endIndex = Math.min(currentPage * panelsPerPage, petData.length);
 
   const handleNextPage = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
+    setCurrentPage(prevPage => prevPage + 1);
   };
 
   const handlePreviousPage = () => {
-    setCurrentPage((prevPage) => Math.max(1, prevPage - 1));
+    setCurrentPage(prevPage => Math.max(1, prevPage - 1));
   };
 
   return (
@@ -32,9 +32,20 @@ const Adoption = () => {
       <div className="background-image flex ml-12">
         {petData.slice(startIndex, endIndex).map((pet, index) => (
           <div key={index} className="rectangle-shape bg-gray-300 rounded-lg w-[25rem] h-[25rem] bg-opacity-20 mt-[5rem] ml-[4.6rem]">
-            <div className={`text-green-400 font-bold flex items-center mt-[1rem] justify-center text-4xl ${index % 2 !== 0 ? 'panel-text' : ''}`}>
-              {pet.PetName}
-            </div>
+            {index % 2 === 0 && pet.Image ? (
+              <>
+                <img
+                  src={`data:image/jpeg;base64,${pet.Image.toString('base64')}`}  // Convert Buffer to base64
+                  alt={pet.PetName}
+                  className="w-full h-full object-cover rounded-t-lg"
+                />
+                <div className="text-green-400 font-bold flex items-center mt-[1rem] justify-center text-4xl">{pet.PetName}</div>
+              </>
+            ) : (
+              <div className={`text-green-400 font-bold flex items-center mt-[1rem] justify-center text-4xl ${index % 2 !== 0 ? 'panel-text' : ''}`}>
+                {pet.PetName}
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -52,6 +63,6 @@ const Adoption = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Adoption;
