@@ -11,7 +11,7 @@ const Navbar = () => {
                     bg-primary text-secondary shadow-lg">
     
     <a href="/"><NavbarIcon icon={<FaHouseChimney size="30" />}/></a>
-    <a href="/about"><NavbarIcon icon={<FaDog size="30" />}/></a>
+    <a href="/adoption"><NavbarIcon icon={<FaDog size="30" />}/></a>
 
     <div className = "fixed bottom-0 left-0 flex flex-col ml-[0.4rem]">
     <a href="/login"><NavbarIcon icon={<FaUser size="30" />}/></a>
