@@ -31,22 +31,25 @@ const Adoption = () => {
       <Navbar />
       <div className="background-image flex ml-12">
         {petData.slice(startIndex, endIndex).map((pet, index) => (
-          <div key={index} className="rectangle-shape bg-gray-300 rounded-lg w-[25rem] h-[25rem] bg-opacity-20 mt-[5rem] ml-[4.6rem]">
+          <div key={index} className="rectangle-shape bg-gray-300 rounded-lg w-[25rem] h-[25rem] bg-opacity-20 mt-[5rem] ml-[11rem] flex flex-col">
             {pet.Image ? (
               <>
                 {console.log('Base64 Image:', `data:image/jpeg;base64,${uint8ArrayToBase64(pet.Image.data)}`)}
                 <img
                   src={`data:image/jpeg;base64,${uint8ArrayToBase64(pet.Image.data)}`}
                   alt={pet.PetName}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  style={{ width: '50%', height: '50%', objectFit: 'cover', borderRadius: '0.5rem 0.5rem 0.5rem 0.5rem', 	border: '0.2rem solid grey', }}
                 />
-                <div className="panel-content">
-                  <div className="text-green-400 font-bold text-4xl">{pet.PetName}</div>
-                  <div className="text-green-400 text-sm">{pet.Description}</div>
-                  <div className="text-green-400 text-sm">Birthday: {pet.DateOfBirth}</div>
+                <div className="panel-content flex-1 ml-[12.4rem] p-1 flex flex-col absolute justify-center items-center w-[12.5rem] h-[12.5rem] top-[1.5rem]">
+                  <div className="text-green-400 font-bold text-4xl mb-0">{pet.PetName}</div>
+                  <div className="text-green-400 text-sm ">Birthday: {pet.DateOfBirth}</div>
                   <div className="text-green-400 text-sm">Owner: {pet.OwnerName}</div>
+                  </div>
+                  
+                  <div className="text-green-400 text-sm m-5">{pet.Description}</div>
+                  
                   {/* Add more information as needed */}
-                </div>
+                
               </>
             ) : (
               <div className={`text-green-400 font-bold flex items-center mt-[1rem] justify-center text-4xl ${index % 2 !== 0 ? 'panel-text' : ''}`}>
