@@ -1,29 +1,44 @@
+// src/Adoption.js
 import React, { useState, useEffect } from 'react';
 import Navbar from './Navbar.js';
+import { useNavigate } from 'react-router-dom';
 import '../css/Adoption.css';
 
 const Adoption = () => {
   const panelsPerPage = 3;
   const [petData, setPetData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch pet information from the backend when the component mounts
-    fetch('http://localhost:3001/api/pets')
-      .then(response => response.json())
-      .then(data => setPetData(data))
-      .catch(error => console.error('Error fetching pet data:', error));
-  }, []);
+    // Check if the user is authenticated when the component mounts
+    fetch('/api/pets', { credentials: 'include' })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('User not authenticated');
+        }
+      })
+      .then((data) => {
+        console.log('Authentication successful:', data);
+        setPetData(data);
+      })
+      .catch((error) => {
+        console.error('Authentication failed:', error);
+        navigate('/login'); // Redirect to login page if not authenticated
+      });
+  }, [navigate]);
 
   const startIndex = (currentPage - 1) * panelsPerPage;
   const endIndex = Math.min(currentPage * panelsPerPage, petData.length);
 
   const handleNextPage = () => {
-    setCurrentPage(prevPage => prevPage + 1);
+    setCurrentPage((prevPage) => prevPage + 1);
   };
 
   const handlePreviousPage = () => {
-    setCurrentPage(prevPage => Math.max(1, prevPage - 1));
+    setCurrentPage((prevPage) => Math.max(1, prevPage - 1));
   };
 
   return (
@@ -51,12 +66,9 @@ const Adoption = () => {
                   <div className="text-green-400 font-bold text-4xl mb-0">{pet.PetName}</div>
                   <div className="text-green-400 text-sm ">Birthday: {pet.DateOfBirth}</div>
                   <div className="text-green-400 text-sm">Owner: {pet.OwnerName}</div>
-                  </div>
-                  
-                  <div className="text-green-400 text-sm m-5">{pet.Description}</div>
-                  
-                  {/* Add more information as needed */}
-                
+                </div>
+
+                <div className="text-green-400 text-sm m-5">{pet.Description}</div>
               </>
             ) : (
               <div className={`text-green-400 font-bold flex items-center mt-[1rem] justify-center text-4xl ${index % 2 !== 0 ? 'panel-text' : ''}`}>
