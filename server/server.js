@@ -19,12 +19,14 @@ const readImageFile = (filePath) => {
 };
 
 app.use(cookieParser());
-app.use(session({
-  secret: 'ABCDEFGHIKL', // replace with a strong, random string
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false }, // set to true in a production environment with HTTPS
-}));
+app.use(
+  session({
+    secret: 'your-secret-key',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }, // set to true in a production environment with HTTPS
+  })
+);
 
 app.use(cors({
   origin: 'http://localhost:3000',
@@ -52,12 +54,13 @@ let db = new sqlite3.Database('dogadopt.db', (err) => {
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-// Middleware to check if the user is authenticated
-// Middleware to check if the user is authenticated
 const isAuthenticated = (req, res, next) => {
-  return next(); // This allows access to all routes without authentication
+  if (req.session && req.session.user) {
+    return next();
+  } else {
+    res.status(401).send('Unauthorized. Please log in.');
+  }
 };
-
 
 // Function to insert image data into the database
 const insertImageData = (petId, imageBuffer) => {
@@ -179,29 +182,25 @@ app.post('/register', (req, res) => {
 
 // ... (your existing routes)
 
-app.get('/api/dashboard', (req, res) => {
+app.get('/api/dashboard', isAuthenticated, (req, res) => {
   if (req.session.user) {
     // User is authenticated
     res.json({ message: 'Welcome to the dashboard', user: req.session.user });
   } else {
     // User is not authenticated
-    res.status(401).json({ message: 'Unauthorized' });
+    res.json({ message: 'Unauthorized' });
   }
 });
 
 app.post('/logout', (req, res) => {
   // Clear the session
-  req.session.destroy(err => {
-    if (err) {
-      console.error('Error destroying session:', err);
-      res.status(500).send('Internal Server Error');
-    } else {
-      res.json({ message: 'Logout successful' });
-    }
-  });
+  req.session.destroy();
+
+  // Clear the token cookie
+  res.clearCookie('token');
+
+  res.json({ message: 'Logout successful' });
 });
-
-
 
 app.get('/profile', isAuthenticated, (req, res) => {
   res.send('This is your profile page.');
@@ -231,3 +230,4 @@ app.use((err, req, res, next) => {
 app.listen(3001, () => {
   console.log('Server is alive on port 3001');
 });
+
