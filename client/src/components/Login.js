@@ -11,25 +11,23 @@ const Login = () => {
 
   const onFinish = async () => {
     try {
-      console.log('Login request data:', { username, password });
-  
       const loginResult = await login(username, password);
   
       console.log('Login result:', loginResult);
   
       if (loginResult.success) {
-        console.log('Authentication successful.');
-        alert('Login successful.');
-        navigate('/');
+        // Redirect or handle successful login
+        console.log('Login successful');
       } else {
-        console.error('Authentication failed:', loginResult.message);
-        alert(`Login failed: ${loginResult.message}`);
+        // Handle failed login
+        console.log('Login failed');
       }
     } catch (error) {
+      // Handle the error...
       console.error('Error during login:', error);
-      alert('Internal Server Error.');
     }
   };
+  
 
   console.log('User:', user);
 
@@ -79,7 +77,8 @@ const Login = () => {
                 <button
                   type="button"
                   onClick={onFinish}
-                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300 ml-[1rem]"
+                  className="bg-blue-500
+                  text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300 ml-[1rem]"
                 >
                   Login
                 </button>

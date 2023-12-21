@@ -5,15 +5,19 @@ const AuthContext = createContext();
 
 const fetchUserData = async (username, password) => {
   try {
-    const response = await fetch(`http://localhost:3001/api/validatePassword`, {
+    const response = await fetch('http://localhost:3001/api/validatePassword', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify({ username, password }),
     });
 
+    console.log('Response from server:', response);
     const userData = await response.json();
+    console.log('User data:', userData);
+
     return userData;
   } catch (error) {
     console.error('Error fetching user data:', error);
@@ -21,37 +25,46 @@ const fetchUserData = async (username, password) => {
   }
 };
 
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // Check authentication state
     const isAuthenticated = checkAuthentication();
 
     if (isAuthenticated) {
-      // If authenticated, set user data (you may fetch more user data here)
       setUser({ username: 'exampleUser' });
     } else {
-      // If not authenticated, clear user data
       setUser(null);
     }
   }, []);
 
   const checkAuthentication = () => {
-    // Check if a session cookie exists
     const sessionCookie = document.cookie.match(/session=([^;]+)/);
-    return sessionCookie ? true : false;
+    const isAuthenticated = sessionCookie ? true : false;
+    console.log('Is authenticated:', isAuthenticated);
+    return isAuthenticated;
   };
 
   const login = async (username, password) => {
-    const userData = await fetchUserData(username, password); // Pass the password here
-    setUser(userData);
-    return { success: true, message: 'Login successful' };
+    try {
+      const userData = await fetchUserData(username, password);
+
+      if (userData.success) {
+        setUser(userData);
+        return { success: true, message: 'Login successful', username: userData.username };
+      } else {
+        console.log('Login failed. Response:', userData);
+        return { success: false, message: 'Login failed' };
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+      return { success: false, message: 'Internal Server Error' };
+    }
   };
+  
 
   const logout = async () => {
-    // Implement your logout logic here
-    // Update the user state
     setUser(null);
   };
 

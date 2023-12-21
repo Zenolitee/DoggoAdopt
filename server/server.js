@@ -145,7 +145,6 @@ app.post('/api/validatePassword', (req, res) => {
       res.status(500).json({ success: false, error: 'Internal Server Error' });
       return;
     }
-    
 
     if (rows.length > 0) {
       // Set user information in the session
@@ -163,12 +162,19 @@ app.post('/register', (req, res) => {
   db.run('INSERT INTO credentials (username, password) VALUES (?, ?)', [username, password], (err) => {
     if (err) {
       console.error('Error during registration:', err);
-      res.status(500).send({ registration: false, message: 'Internal Server Error' });
+
+      // Check for unique constraint violation
+      if (err.message.includes('UNIQUE constraint failed')) {
+        return res.status(400).send({ registration: false, message: 'Username already exists' });
+      }
+
+      return res.status(500).send({ registration: false, message: 'Internal Server Error' });
     } else {
       res.send({ registration: true });
     }
   });
 });
+
 
 // ... (your existing routes)
 

@@ -25,7 +25,7 @@ const CreateAccount = () => {
       if (response.data.registration) {
         setRegistrationSuccess(true);
         alert('Registration successful. You can now log in.');
-          navigate('/login');
+        navigate('/login');
       } else {
         alert('Registration failed. ' + response.data.message);
       }
@@ -74,13 +74,13 @@ const CreateAccount = () => {
                 placeholder="Enter your password"
               />
             </div>
-              <button
-                type="button"
-                onClick={onRegister}
-                className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring focus:border-green-300"
-              >
+            <button
+              type="button"
+              onClick={onRegister}
+              className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-700 focus:outline-none focus:ring focus:border-green-300"
+            >
               Register
-              </button>
+            </button>
           </div>
         </div>
       </div>
