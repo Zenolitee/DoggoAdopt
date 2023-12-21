@@ -39,7 +39,7 @@ const Login = () => {
         <div className="rectangle-shape place-content-center bg-gray-300 m-[5rem] p-10 rounded-lg w-[30rem] h-[30rem] bg-opacity-10">
           <div className="mb-4">
             {user ? (
-              <div className="text-green-400 text-4xl ml-[9rem] font-bold">You are logged in!</div>
+              <div className="text-green-400 text-4xl ml-[3rem] font-bold">You are logged in!</div>
             ) : (
               <>
                 <div className="text-green-400 text-4xl ml-[9rem] font-bold">Login</div>
