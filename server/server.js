@@ -53,13 +53,11 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 // Middleware to check if the user is authenticated
+// Middleware to check if the user is authenticated
 const isAuthenticated = (req, res, next) => {
-  if (req.session && req.session.user && req.session.user.username) {
-    return next();
-  } else {
-    res.status(401).send('Unauthorized. Please log in.');
-  }
+  return next(); // This allows access to all routes without authentication
 };
+
 
 // Function to insert image data into the database
 const insertImageData = (petId, imageBuffer) => {
@@ -127,11 +125,14 @@ app.get('/api/pets', isAuthenticated, (req, res) => {
       res.status(500).json({ error: 'Internal Server Error' });
     } else {
       // Ensure that the 'Image' property is base64-encoded before sending it to the client
-      const petsWithBase64Image = rows.map((pet) => ({
-        ...pet,
-        Image: pet.Image.toString('base64'),
-      }));
-
+      const petsWithBase64Image = rows.map((pet) => {
+        const petWithBase64Image = { ...pet };
+        if (pet.Image) {
+          petWithBase64Image.Image = pet.Image.toString('base64');
+        }
+        return petWithBase64Image;
+      });
+      
       res.json(petsWithBase64Image);
     }
   });
@@ -145,7 +146,6 @@ app.post('/api/validatePassword', (req, res) => {
       res.status(500).json({ success: false, error: 'Internal Server Error' });
       return;
     }
-    
 
     if (rows.length > 0) {
       // Set user information in the session
@@ -163,12 +163,19 @@ app.post('/register', (req, res) => {
   db.run('INSERT INTO credentials (username, password) VALUES (?, ?)', [username, password], (err) => {
     if (err) {
       console.error('Error during registration:', err);
-      res.status(500).send({ registration: false, message: 'Internal Server Error' });
+
+      // Check for unique constraint violation
+      if (err.message.includes('UNIQUE constraint failed')) {
+        return res.status(400).send({ registration: false, message: 'Username already exists' });
+      }
+
+      return res.status(500).send({ registration: false, message: 'Internal Server Error' });
     } else {
       res.send({ registration: true });
     }
   });
 });
+
 
 // ... (your existing routes)
 
