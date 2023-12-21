@@ -5,6 +5,17 @@ const cors = require('cors');
 const multer = require('multer');
 const fs = require('fs');
 
+// Function to read an image file and return a Buffer
+const readImageFile = (filePath) => {
+  try {
+    const imageBuffer = fs.readFileSync(filePath);
+    return imageBuffer;
+  } catch (error) {
+    console.error('Error reading image file:', error);
+    return null;
+  }
+};
+
 app.use(cors({
   origin: 'http://localhost:3000',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -27,17 +38,6 @@ let db = new sqlite3.Database('dogadopt.db', (err) => {
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
-
-// Function to read an image file and return a Buffer
-const readImageFile = (filePath) => {
-  try {
-    const imageBuffer = fs.readFileSync(filePath);
-    return imageBuffer;
-  } catch (error) {
-    console.error('Error reading image file:', error);
-    return null;
-  }
-};
 
 // Function to insert image data into the database
 const insertImageData = (petId, imageBuffer) => {
@@ -115,7 +115,7 @@ app.post('/validatePassword', (req, res) => {
     db.all('SELECT * FROM credentials WHERE username = ? AND password = ? COLLATE NOCASE', [username, password], (err, rows) => {
         if (err) {
             console.error('Error during SQL query:', err);
-            res.status(500).send({ sucess: false, error: 'Internal Server Error' });
+            res.status(500).send({ success: false, error: 'Internal Server Error' });
             return;
         }
 
@@ -139,53 +139,4 @@ app.post('/register', (req, res) => {
     });
   });
 
-app.listen(3001, () => {console.log("Server is alive.")})
-
-
-
-/*
-app.get("/api", (req, res) => {
-    res.json({"users": ["userOne", "userTwo", "userThree"] })
-})
-
-
-
-db.serialize(() => {
-    db.run('CREATE TABLE lorem (info TEXT)')
-    const stmt = db.prepare('INSERT INTO lorem VALUES (?)')
-  
-    for (let i = 0; i < 10; i++) {
-      stmt.run(`Ipsum ${i}`)
-  const { username, password } = req.body;
-  db.all('SELECT * FROM credentials WHERE username = ? AND password = ? COLLATE NOCASE', [username, password], (err, rows) => {
-    if (err) {
-      console.error('Error during SQL query:', err);
-      res.status(500).send({ validation: false, error: 'Internal Server Error' });
-      return;
-    }
-
-    if (rows.length > 0) {
-      res.send({ validation: true });
-    } else {
-      res.send({ validation: false });
-    }
-  });
-});
-
-app.post('/register', (req, res) => {
-  const { username, password } = req.body;
-  db.run('INSERT INTO credentials (username, password) VALUES (?, ?)', [username, password], (err) => {
-    if (err) {
-      console.error('Error during registration:', err);
-      res.status(500).send({ registration: false, message: 'Internal Server Error' });
-    } else {
-      res.send({ registration: true });
-    }
-  });
-});
-
-
-
-app.listen(3001, () => {
-  console.log('Server is alive.');
-});*/
+app.listen(3001, () => {console.log("Server is alive.")});
