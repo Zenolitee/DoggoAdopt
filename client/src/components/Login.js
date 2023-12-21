@@ -1,31 +1,33 @@
 import React, { useState } from 'react';
-import "../css/Login.css";
-import Navbar from "./Navbar.js";
-import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import Navbar from './Navbar';
 import { useAuth } from '../context/Auth';
 
 const Login = () => {
-  const { login , user } = useAuth(); // Use the login function from the context
+  const { login, user } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
   const onFinish = async () => {
     try {
       console.log('Login request data:', { username, password });
   
-      const response = await axios.post('http://localhost:3001/validatePassword', { username, password });
+      const loginResult = await login(username, password);
   
-      console.log('Login response:', response);
+      console.log('Login result:', loginResult);
   
-      if (response.data.validation !== false) {
-        login({ username: response.data.username });
+      if (loginResult.success) {
+        console.log('Authentication successful.');
         alert('Login successful.');
+        navigate('/');
       } else {
-        alert('Incorrect password or user not registered.');
+        console.error('Authentication failed:', loginResult.message);
+        alert(`Login failed: ${loginResult.message}`);
       }
     } catch (error) {
       console.error('Error during login:', error);
+      alert('Internal Server Error.');
     }
   };
 
