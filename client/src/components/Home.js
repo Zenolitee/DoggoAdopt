@@ -36,7 +36,7 @@ const Home = () => {
         setUser(null);
         navigate('/login');
       })
-      .catch((error) => console.error('Logout failed:', error));
+      .catch((error) => console.error('Logout failed!!!:', error));
   };
 
   return (
