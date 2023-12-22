@@ -23,7 +23,7 @@ app.use(
   session({
     secret: 'your-secret-key',
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: { secure: false }, // set to true in a production environment with HTTPS
   })
 );
@@ -94,6 +94,77 @@ imageFiles.forEach((imageFile, index) => {
     console.error(`Failed to read image file: ${imagePath}`);
   }
 });
+
+app.post('/api/forms/submit', isAuthenticated, (req, res) => {
+  const { petID, fullName, contactNumber, reasonForAdopting, validID } = req.body;
+
+  const insertFormQuery = `
+    INSERT INTO AdoptionForms (PetID, FullName, ContactNumber, ReasonForAdopting, ValidID)
+    VALUES (?, ?, ?, ?, ?)
+  `;
+
+  db.run(
+    insertFormQuery,
+    [petID, fullName, contactNumber, reasonForAdopting, validID],
+    (err) => {
+      if (err) {
+        console.error('Error during form submission:', err);
+        res.status(500).json({ submit: false, error: 'Internal Server Error' });
+      } else {
+        res.json({ submit: true, message: 'Form submitted successfully' });
+      }
+    }
+  );
+});
+
+
+
+// Add a new route to fetch form submissions
+app.get('/api/forms', isAuthenticated, (req, res) => {
+  const query = 'SELECT * FROM AdoptionForms';
+  db.all(query, (err, rows) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      res.json(rows);
+    }
+  });
+});
+
+app.delete('/api/forms/:formID', isAuthenticated, (req, res) => {
+  const formID = req.params.formID;
+
+  // Use the formID to delete the corresponding form submission from the database
+  const deleteQuery = 'DELETE FROM AdoptionForms WHERE FormID = ?';
+
+  db.run(deleteQuery, [formID], (err) => {
+    if (err) {
+      console.error('Error deleting form submission:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      res.json({ success: true, message: 'Form submission deleted successfully' });
+    }
+  });
+});
+
+app.patch('/api/forms/:formID/status', isAuthenticated, (req, res) => {
+  const formID = req.params.formID;
+  const { status } = req.body;
+
+  // Use the formID to update the status in the database
+  const updateQuery = 'UPDATE AdoptionForms SET Status = ? WHERE FormID = ?';
+
+  db.run(updateQuery, [status, formID], (err) => {
+    if (err) {
+      console.error('Error updating status:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      res.json({ success: true, message: 'Status updated successfully' });
+    }
+  });
+});
+
 
 app.post('/api/upload', isAuthenticated, upload.single('image'), (req, res) => {
   try {
