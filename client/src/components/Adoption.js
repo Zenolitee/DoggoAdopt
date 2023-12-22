@@ -69,12 +69,6 @@ const Adoption = () => {
                 </div>
 
                 <div className="text-green-400 text-sm m-5">{pet.Description}</div>
-                <button
-                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300 mt-2"
-                onClick={() => navigate(`/adopt/${pet.id}`)}
-              >
-                Adopt
-              </button>
               </>
             ) : (
               <div className={`text-green-400 font-bold flex items-center mt-[1rem] justify-center text-4xl ${index % 2 !== 0 ? 'panel-text' : ''}`}>
@@ -84,18 +78,30 @@ const Adoption = () => {
           </div>
         ))}
       </div>
-      <div className="absolute bottom-4 ml-[12rem]">
-        {currentPage > 1 && (
-          <div className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300 ml-[1rem] h-[2.5rem]" onClick={handlePreviousPage}>
-            Previous Page
-          </div>
-        )}
-        {currentPage < Math.ceil(petData.length / panelsPerPage) && (
-          <div className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300 ml-[1rem] h-[2.5rem]" onClick={handleNextPage}>
-            Next Page
-          </div>
-        )}
-      </div>
+      
+        <div className=" absolute top-5 flex mx-auto ml-[5rem]">
+  {currentPage > 1 && (
+    <div className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300 h-[2.5rem]" onClick={handlePreviousPage}>
+      Previous Page
+    </div>
+  )}
+  {currentPage < Math.ceil(petData.length / panelsPerPage) && (
+    <div className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300 h-[2.5rem] ml-[1rem]" onClick={handleNextPage}>
+      Next Page
+    </div>
+  )}
+</div>
+
+
+
+
+
+
+
+
+
+
+
     </div>
   );
 };
