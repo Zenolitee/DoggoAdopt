@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './Navbar.js';
 import { useNavigate } from 'react-router-dom';
 import '../css/Adoption.css';
+import Forms from './Forms';
 
 const Adoption = () => {
   const panelsPerPage = 3;
@@ -41,6 +42,7 @@ const Adoption = () => {
     setCurrentPage((prevPage) => Math.max(1, prevPage - 1));
   };
 
+
   return (
     <div className="container flex max-w-none">
       <Navbar />
@@ -71,7 +73,7 @@ const Adoption = () => {
                 <div className="text-green-400 text-sm m-5">{pet.Description}</div>
                 <button
                 className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300 mt-2"
-                onClick={() => navigate(`/adopt/${pet.id}`)}
+                onClick={() => navigate(`/forms/${pet.PetName}`)}
               >
                 Adopt
               </button>
@@ -99,7 +101,7 @@ const Adoption = () => {
 </div>
 
 
-
+<Forms path="/forms/:PetName" />
 
 
 
