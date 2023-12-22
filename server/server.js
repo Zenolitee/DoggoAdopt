@@ -141,6 +141,28 @@ app.get('/api/pets', isAuthenticated, (req, res) => {
   });
 });
 
+app.get('/api/pet/:petName', isAuthenticated, (req, res) => {
+  const { petName } = req.params;
+
+  const query = 'SELECT * FROM PetInformation WHERE PetName = ?';
+  db.get(query, [petName], (err, row) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else if (row) {
+      // Ensure that the 'Image' property is base64-encoded before sending it to the client
+      const petWithBase64Image = { ...row };
+      if (row.Image) {
+        petWithBase64Image.Image = row.Image.toString('base64');
+      }
+      res.json(petWithBase64Image);
+    } else {
+      res.status(404).json({ error: 'Pet not found' });
+    }
+  });
+});
+
+
 app.post('/api/validatePassword', (req, res) => {
   const { username, password } = req.body;
   db.all('SELECT * FROM credentials WHERE username = ? AND password = ? COLLATE NOCASE', [username, password], (err, rows) => {
