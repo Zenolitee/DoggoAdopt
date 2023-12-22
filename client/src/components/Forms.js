@@ -52,11 +52,11 @@ const Forms = () => {
     <div className="container flex max-w-none">
       <Navbar />
       <div className="background-image flex items-center justify-center ml-12">
-        <div className="rectangle-shape bg-gray-300 rounded-lg w-[40rem] h-[40rem] bg-opacity-20 mt-[5rem] ml-[5rem] flex flex-col">
-          <h1>Adopting {PetName}</h1>
-        
+        <div className="rectangle-shape bg-gray-300 rounded-lg w-[40rem] h-[40rem] bg-opacity-20 mt-[5rem] ml-[5rem] flex flex-col p-8">
+          <h1 className="text-3xl text-green-400 font-bold mb-6 text-center">Adopting {PetName}</h1>
+
           {petDetails ? (
-            <div>
+            <div className="mb-6 text-center text-green-400">
               <p>Birthday: {petDetails.DateOfBirth}</p>
               <p>Owner: {petDetails.OwnerName}</p>
               <p>Description: {petDetails.Description}</p>
@@ -67,59 +67,57 @@ const Forms = () => {
           )}
 
           <form onSubmit={handleSubmit}>
-            <div className="text-green-400 font-bold">
-              <label>
-                Full Name:
-                <input
-                  type="text"
-                  name="fullName"
-                  value={adoptFormData.fullName}
-                  onChange={handleInputChange}
-                  className="mt-1 p-2 w-[25rem] border rounded-md"
-                />
-              </label>
+            <div className="mb-4">
+              <label className="text-green-400 font-bold block mb-1">Full Name:</label>
+              <input
+                type="text"
+                name="fullName"
+                value={adoptFormData.fullName}
+                onChange={handleInputChange}
+                className="text-black-500 p-2 w-[36rem] border rounded-md"
+              />
             </div>
 
-            <div className="text-green-400 font-bold">
-              <label>
-                Contact Number:
-                <input
-                  type="text"
-                  name="contactNumber"
-                  value={adoptFormData.contactNumber}
-                  onChange={handleInputChange}
-                  className="mt-1 p-2 w-[25rem] border rounded-md"
-                />
-              </label>
+            <div className="mb-4">
+              <label className="text-green-400 font-bold block mb-1">Contact Number:</label>
+              <input
+                type="text"
+                name="contactNumber"
+                value={adoptFormData.contactNumber}
+                onChange={handleInputChange}
+                className="text-black-500 p-2 w-[36rem] border rounded-md"
+              />
             </div>
 
-            <div className="text-green-400 font-bold">
-              <label>
-                Reason for Adopting:
-                <textarea
-                  name="reasonForAdopting"
-                  value={adoptFormData.reasonForAdopting}
-                  onChange={handleInputChange}
-                  className="text-black-500 mt-1 p-2 w-[25rem] border rounded-md"
-                />
-              </label>
+            <div className="mb-4">
+              <label className="text-green-400 font-bold block mb-1">Reason for Adopting:</label>
+              <textarea
+                name="reasonForAdopting"
+                value={adoptFormData.reasonForAdopting}
+                onChange={handleInputChange}
+                className="text-black-500 p-2 w-[36rem] border rounded-md"
+              />
             </div>
 
-            <div className="text-green-400 font-bold">
-              <label>
-                Valid ID:
-                <input
-                  type="text"
-                  name="validID"
-                  value={adoptFormData.validID}
-                  onChange={handleInputChange}
-                  className="mt-1 p-2 w-[25rem] border rounded-md text-black-500"
-                />
-              </label>
+            <div className="mb-4">
+              <label className="text-green-400 font-bold block mb-1">Valid ID:</label>
+              <input
+                type="text"
+                name="validID"
+                value={adoptFormData.validID}
+                onChange={handleInputChange}
+                className="text-black-500 p-2 w-[36rem] border rounded-md"
+              />
             </div>
 
-            <button type="submit" className="bg-blue-500
-                text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300 ml-[1rem]">Submit Adoption Form</button>
+            <div className="flex justify-center">
+              <button
+                type="submit"
+                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300"
+              >
+                Submit Adoption Form
+              </button>
+            </div>
           </form>
         </div>
       </div>
