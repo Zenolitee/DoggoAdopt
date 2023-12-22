@@ -69,6 +69,12 @@ const Adoption = () => {
                 </div>
 
                 <div className="text-green-400 text-sm m-5">{pet.Description}</div>
+                <button
+                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring focus:border-blue-300 mt-2"
+                onClick={() => navigate(`/adopt/${pet.id}`)}
+              >
+                Adopt
+              </button>
               </>
             ) : (
               <div className={`text-green-400 font-bold flex items-center mt-[1rem] justify-center text-4xl ${index % 2 !== 0 ? 'panel-text' : ''}`}>
