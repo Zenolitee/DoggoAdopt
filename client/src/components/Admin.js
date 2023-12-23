@@ -62,6 +62,28 @@ const Admin = () => {
           console.error('Error updating status:', error);
         }
       };
+
+      const handleActualDelete = async (formID) => {
+        try {
+          const response = await fetch(`/api/forms/${formID}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+      
+          if (response.ok) {
+            setFormSubmissions(prevSubmissions =>
+              prevSubmissions.filter(submission => submission.FormID !== formID)
+            );
+          } else {
+            console.error('Failed to delete submission:', response.statusText);
+          }
+        } catch (error) {
+          console.error('Error deleting submission:', error);
+        }
+      };
+      
   
       const handleDelete = async (formID, username) => {
         try {
@@ -71,10 +93,12 @@ const Admin = () => {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              status: 'None', // Set the status to 'None' instead of deleting
+              status: 'Rejected', // Set the status to 'None' instead of deleting
               username: username, // Assuming username is available in the submission
             }),
           });
+
+      
       
           if (response.ok) {
             setFormSubmissions((prevSubmissions) =>
@@ -138,6 +162,13 @@ const Admin = () => {
             >
               Reject
             </button>
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2"
+              onClick={() => handleActualDelete(submission.FormID)}
+            >
+              Delete
+            </button>
+
           </td>
         </tr>
       ))}
