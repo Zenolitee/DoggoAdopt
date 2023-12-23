@@ -1,4 +1,9 @@
 @import "tailwindcss/tailwind.css";
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+
 
 .background-image {
     background: linear-gradient(rgba(0, 0, 0, 0.30), rgba(0, 0, 0, 0.30)), url('../image/background.jpg');
@@ -7,3 +12,18 @@
     width: 100%;
     background-repeat: repeat;
 }
+
+.skeleton-loading-image {
+   
+    animation: loading 1.5s infinite; /* Adjust the animation duration as needed */
+    border-radius: 0.5rem;
+  }
+  
+  @keyframes loading {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
