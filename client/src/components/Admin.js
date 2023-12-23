@@ -33,25 +33,25 @@ const Admin = () => {
         });
     }, []);
   
-    const handleStatusChange = async (formID) => {
-        try {
-          // Assuming you have an API endpoint to update the status
-          const response = await fetch(`/api/forms/${formID}/status`, {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              status: 'Approved', // Set the desired status, e.g., 'Approved'
-            }),
+    const handleStatusChange = async (formID, username, newStatus) => {
+      try {
+        const response = await fetch(`/api/forms/${formID}/status`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            status: newStatus, // 'Approved' or 'Rejected'
+            username: username,
+          }),
           });
     
           if (response.ok) {
-            // If the update is successful, update the local state
+            
             setFormSubmissions((prevSubmissions) => {
               return prevSubmissions.map((submission) =>
                 submission.FormID === formID
-                  ? { ...submission, Status: 'Approved' } // Update the status in the local state
+                  ? { ...submission, Status: 'Approved' } 
                   : submission
               );
             });
@@ -119,7 +119,7 @@ const Admin = () => {
           <td className="border p-2">
             <button
               className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-              onClick={() => handleStatusChange(submission.FormID)}
+              onClick={() => handleStatusChange(submission.FormID, submission.Username, 'Approved')}
             >
               Approve
             </button>

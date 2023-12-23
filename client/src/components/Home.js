@@ -115,6 +115,11 @@ const Home = () => {
             <h1 className="text-white ml-[4rem] mt-20 text-4xl font-nunito w-[24rem]">
               Welcome to the homepage, {user.username}!
             </h1>
+
+            <div className="user-status ml-[4rem]">
+              <p className="text-green-400">Your application status: <strong>{user.status}</strong></p>
+            </div>
+
             <button
               type="button"
               className="focus:outline-none text-white bg-red-500 hover:bg-red-800 focus:ring-1 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5  mb-2 dark:bg-green-400 dark:hover:bg-green-500 dark:focus:ring-green-600 ml-[4rem] mt-[2rem]"
