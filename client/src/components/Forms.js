@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import '../css/Forms.css';
 import Navbar from './Navbar.js';
 
@@ -13,6 +13,7 @@ const Forms = () => {
     validID: '',
   });
   const [formSubmissions, setFormSubmissions] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Fetch pet details based on the PetName parameter
@@ -82,6 +83,7 @@ const Forms = () => {
   
       if (data.submit) {
         console.log('Adoption form submitted successfully');
+        navigate('/');
         // Optionally, you can fetch updated form submissions here
       } else {
         console.error('Failed to submit adoption form');

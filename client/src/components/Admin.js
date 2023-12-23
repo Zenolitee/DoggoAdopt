@@ -33,25 +33,25 @@ const Admin = () => {
         });
     }, []);
   
-    const handleStatusChange = async (formID) => {
-        try {
-          // Assuming you have an API endpoint to update the status
-          const response = await fetch(`/api/forms/${formID}/status`, {
-            method: 'PATCH',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              status: 'Approved', // Set the desired status, e.g., 'Approved'
-            }),
+    const handleStatusChange = async (formID, username, newStatus) => {
+      try {
+        const response = await fetch(`/api/forms/${formID}/status`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            status: newStatus, // 'Approved' or 'Rejected'
+            username: username,
+          }),
           });
     
           if (response.ok) {
-            // If the update is successful, update the local state
+            
             setFormSubmissions((prevSubmissions) => {
               return prevSubmissions.map((submission) =>
                 submission.FormID === formID
-                  ? { ...submission, Status: 'Approved' } // Update the status in the local state
+                  ? { ...submission, Status: 'Approved' } 
                   : submission
               );
             });
@@ -62,8 +62,8 @@ const Admin = () => {
           console.error('Error updating status:', error);
         }
       };
-  
-      const handleDelete = async (formID) => {
+
+      const handleActualDelete = async (formID) => {
         try {
           const response = await fetch(`/api/forms/${formID}`, {
             method: 'DELETE',
@@ -71,16 +71,48 @@ const Admin = () => {
               'Content-Type': 'application/json',
             },
           });
-    
+      
           if (response.ok) {
-            setFormSubmissions((prevSubmissions) =>
-              prevSubmissions.filter((submission) => submission.FormID !== formID)
+            setFormSubmissions(prevSubmissions =>
+              prevSubmissions.filter(submission => submission.FormID !== formID)
             );
           } else {
             console.error('Failed to delete submission:', response.statusText);
           }
         } catch (error) {
           console.error('Error deleting submission:', error);
+        }
+      };
+      
+  
+      const handleDelete = async (formID, username) => {
+        try {
+          const response = await fetch(`/api/forms/${formID}/status`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              status: 'Rejected', // Set the status to 'None' instead of deleting
+              username: username, // Assuming username is available in the submission
+            }),
+          });
+
+      
+      
+          if (response.ok) {
+            setFormSubmissions((prevSubmissions) =>
+              prevSubmissions.map((submission) =>
+                submission.FormID === formID
+                  ? { ...submission, Status: 'None' }
+                  : submission
+              )
+            );
+          } else {
+            console.error('Failed to change status:', response.statusText);
+          }
+        } catch (error) {
+          console.error('Error changing status:', error);
         }
       };
 
@@ -119,16 +151,24 @@ const Admin = () => {
           <td className="border p-2">
             <button
               className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-              onClick={() => handleStatusChange(submission.FormID)}
+              onClick={() => handleStatusChange(submission.FormID, submission.Username, 'Approved')}
             >
               Approve
             </button>
             <button
               className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
-              onClick={() => handleDelete(submission.FormID)}
+              onClick={() => handleDelete(submission.FormID, submission.FullName)}
+
+            >
+              Reject
+            </button>
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2"
+              onClick={() => handleActualDelete(submission.FormID)}
             >
               Delete
             </button>
+
           </td>
         </tr>
       ))}

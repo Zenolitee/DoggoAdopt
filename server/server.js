@@ -170,18 +170,23 @@ app.delete('/api/forms/:formID', isAuthenticated, (req, res) => {
 
 app.patch('/api/forms/:formID/status', isAuthenticated, (req, res) => {
   const formID = req.params.formID;
-  const { status } = req.body;
+  const { status, username } = req.body; 
 
-  // Use the formID to update the status in the database
-  const updateQuery = 'UPDATE AdoptionForms SET Status = ? WHERE FormID = ?';
+  const updateFormQuery = 'UPDATE AdoptionForms SET Status = ? WHERE FormID = ?';
+  const updateCredentialsQuery = 'UPDATE credentials SET status = ? WHERE username = (SELECT FullName FROM AdoptionForms WHERE FormID = ?)';
 
-  db.run(updateQuery, [status, formID], (err) => {
+  db.run(updateFormQuery, [status, formID], (err) => {
     if (err) {
-      console.error('Error updating status:', err);
-      res.status(500).json({ error: 'Internal Server Error' });
-    } else {
-      res.json({ success: true, message: 'Status updated successfully' });
+      console.error('Error updating form status:', err);
+      return res.status(500).json({ error: 'Internal Server Error' });
     }
+    db.run(updateCredentialsQuery, [status, formID], (err) => {
+      if (err) {
+        console.error('Error updating credentials status:', err);
+        return res.status(500).json({ error: 'Internal Server Error' });
+      }
+      res.json({ success: true, message: 'Status updated successfully' });
+    });
   });
 });
 
@@ -296,13 +301,19 @@ app.post('/register', (req, res) => {
 // ... (your existing routes)
 
 app.get('/api/dashboard', isAuthenticated, (req, res) => {
-  if (req.session.user) {
-    // User is authenticated
-    res.json({ message: 'Welcome to the dashboard', user: req.session.user });
-  } else {
-    // User is not authenticated
-    res.json({ message: 'Unauthorized' });
-  }
+  const username = req.session.user.username;
+
+  const query = 'SELECT username, status FROM credentials WHERE username = ?';
+  db.get(query, [username], (err, row) => {
+    if (err) {
+      console.error(err);
+      res.status(500).json({ error: 'Internal Server Error' });
+    } else if (row) {
+      res.json({ message: 'Welcome to the dashboard', user: row });
+    } else {
+      res.status(404).json({ message: 'User not found' });
+    }
+  });
 });
 
 app.post('/logout', (req, res) => {
