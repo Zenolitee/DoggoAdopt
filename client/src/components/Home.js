@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 const Home = () => {
   const [user, setUser] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [formData, setFormData] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,26 +38,37 @@ const Home = () => {
     setModalOpen(false);
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    setFormData((prevData) => ({
+      ...prevData,
+      image: file,
+    }));
+  };
+
   const handleRegisterPet = () => {
     // Collect form data from your actual form fields
-    const petFormData = {
-      petName: document.getElementById('petName').value,
-      ownerName: document.getElementById('ownerName').value,
-      description: document.getElementById('description').value,
-      age: document.getElementById('age').value,
-      dogBreed: document.getElementById('dogBreed').value,
-      dateOfBirth: document.getElementById('dateOfBirth').value,
-      imageBase64: 'YourBase64Image', // Replace with the base64-encoded image
-    };
-    console.log('Pet FormData:', petFormData);
-
+    const petFormData = new FormData();
+    petFormData.append('petName', document.getElementById('petName').value);
+    petFormData.append('ownerName', document.getElementById('ownerName').value);
+    petFormData.append('description', document.getElementById('description').value);
+    petFormData.append('age', document.getElementById('age').value);
+    petFormData.append('dogBreed', document.getElementById('dogBreed').value);
+    petFormData.append('dateOfBirth', document.getElementById('dateOfBirth').value);
+  
+    // Get the file input element
+    const imageInput = document.getElementById('image');
+  
+    // Check if a file is selected
+    if (imageInput.files.length > 0) {
+      // Append the selected file to the FormData object
+      petFormData.append('image', imageInput.files[0]);
+    }
+  
     // Send a request to the server to handle the pet registration
     fetch('/api/register-pet', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(petFormData),
+      body: petFormData,
     })
       .then((response) => {
         if (response.ok) {
@@ -158,6 +170,9 @@ const Home = () => {
           <label htmlFor="dateOfBirth">Date of Birth:</label>
           <input type="date" id="dateOfBirth" name="dateOfBirth" required className="block w-full border rounded-md p-2" />
         </div>
+
+        <label htmlFor="image">Image:</label>
+              <input type="file" id="image" name="image" accept="image/*" onChange={handleImageChange} />
 
         <div className="flex justify-center mt-4">
           <button type="button" onClick={handleRegisterPet} className="bg-green-500 hover:bg-green-600 text-white font-medium rounded-lg py-2 px-4 mr-2">
