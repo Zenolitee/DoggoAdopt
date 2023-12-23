@@ -117,6 +117,22 @@ app.post('/api/forms/submit', isAuthenticated, (req, res) => {
   );
 });
 
+app.post('/api/register-pet', isAuthenticated, (req, res) => {
+  const { petName, ownerName, description, age, dogBreed, dateOfBirth, imageBase64 } = req.body;
+  const insertQuery = `
+    INSERT INTO PetInformation (PetName, OwnerName, Description, Age, DogBreed, DateOfBirth, Image)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  db.run(insertQuery, [petName, ownerName, description, age, dogBreed, dateOfBirth, imageBase64], (err) => {
+    if (err) {
+      console.error('Error during pet registration:', err);
+      res.status(500).send({ registration: false, error: 'Internal Server Error' });
+    } else {
+      res.json({ registration: true, message: 'Pet registered successfully' });
+    }
+  });
+});
 
 
 // Add a new route to fetch form submissions
