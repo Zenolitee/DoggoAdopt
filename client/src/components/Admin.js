@@ -63,24 +63,32 @@ const Admin = () => {
         }
       };
   
-      const handleDelete = async (formID) => {
+      const handleDelete = async (formID, username) => {
         try {
-          const response = await fetch(`/api/forms/${formID}`, {
-            method: 'DELETE',
+          const response = await fetch(`/api/forms/${formID}/status`, {
+            method: 'PATCH',
             headers: {
               'Content-Type': 'application/json',
             },
+            body: JSON.stringify({
+              status: 'None', // Set the status to 'None' instead of deleting
+              username: username, // Assuming username is available in the submission
+            }),
           });
-    
+      
           if (response.ok) {
             setFormSubmissions((prevSubmissions) =>
-              prevSubmissions.filter((submission) => submission.FormID !== formID)
+              prevSubmissions.map((submission) =>
+                submission.FormID === formID
+                  ? { ...submission, Status: 'None' }
+                  : submission
+              )
             );
           } else {
-            console.error('Failed to delete submission:', response.statusText);
+            console.error('Failed to change status:', response.statusText);
           }
         } catch (error) {
-          console.error('Error deleting submission:', error);
+          console.error('Error changing status:', error);
         }
       };
 
@@ -125,9 +133,10 @@ const Admin = () => {
             </button>
             <button
               className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded ml-2"
-              onClick={() => handleDelete(submission.FormID)}
+              onClick={() => handleDelete(submission.FormID, submission.FullName)}
+
             >
-              Delete
+              Reject
             </button>
           </td>
         </tr>
